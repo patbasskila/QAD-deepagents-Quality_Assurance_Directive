@@ -18,7 +18,6 @@ The project demonstrates:
 - Artifact-based traceability
 - Production-style backend architecture
 
-This repository is designed as a portfolio showcase of applied AI system design and implementation.
 
 ### User Interface
 
@@ -259,4 +258,5 @@ http://127.0.0.1:8000
 - sentence-transformers (optional local)
 - Uvicorn
 - HTML/CSS frontend
+
 
