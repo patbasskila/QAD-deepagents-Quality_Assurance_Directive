@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "columns": [
+    "Program",
+    "ContractId",
+    "ContractVersion",
+    "PackagingRequirements",
+    "ShippingInstructions",
+    "MarkingLabeling",
+    "InspectionAcceptance",
+    "SpecialHandling",
+    "RequiredDocuments",
+    "SignoffRoles"
+  ]
+}

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>QAD Contract Intake</title>
+
+  <style>
+    /* =========================
+       Global / Reset
+       ========================= */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root{
+      --ng-blue:#00249C;
+      --ng-blue-dark:#001a70;
+      --bg:#f5f7fa;
+      --text:#222;
+      --muted:#666;
+      --card:#fff;
+      --border:#d6d9de;
+      --danger:#b00020;
+      --success:#0b6623;
+
+      --soft-blue:#f0f3ff;
+      --soft-blue-border:#dfe5ff;
+      --soft-green:#f0fff5;
+      --soft-green-border:#c7f0d6;
+      --soft-red:#fff0f2;
+      --soft-red-border:#ffd1d8;
+    }
+
+    body{
+      margin:0;
+      font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    /* =========================
+       Header / Footer
+       ========================= */
+    header{
+      background:var(--ng-blue);
+      color:#fff;
+      padding:22px 0;
+      text-align:center;
+    }
+    header h1{
+      margin:0;
+      font-size:1.8rem;
+    }
+    header p{
+      margin:8px 0 0;
+      opacity:.9;
+    }
+
+    footer{
+      text-align:center;
+      padding:16px;
+      color:#fff;
+      background:var(--ng-blue);
+      margin-top:26px;
+      font-size:.92rem;
+    }
+
+    /* =========================
+       Layout
+       ========================= */
+    main{
+      padding:34px 32px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid rgba(0,0,0,0.06);
+      border-radius:14px;
+      max-width:860px;
+      width:100%;
+      margin:0 auto;
+      padding:26px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+    }
+
+    .full{
+      grid-column: 1 / -1;
+    }
+
+    /* =========================
+       Form Elements
+       ========================= */
+    label{
+      display:block;
+      font-weight:600;
+      margin-bottom:8px;
+    }
+
+    input[type="text"],
+    input[type="file"]{
+      width:100%;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:8px;
+      font-size:1rem;
+      background:#fff;
+    }
+
+    /* File input polish (Windows-safe) */
+    input[type="file"]::file-selector-button{
+      background:var(--ng-blue);
+      color:#fff;
+      border:none;
+      padding:8px 12px;
+      border-radius:8px;
+      margin-right:10px;
+      cursor:pointer;
+    }
+    input[type="file"]::file-selector-button:hover{
+      background:var(--ng-blue-dark);
+    }
+
+    .hint{
+      margin-top:6px;
+      font-size:.88rem;
+      color:var(--muted);
+    }
+
+    .actions{
+      margin-top:18px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    button{
+      background:var(--ng-blue);
+      color:#fff;
+      border:none;
+      padding:12px 18px;
+      border-radius:10px;
+      font-size:1rem;
+      cursor:pointer;
+    }
+    button:hover{
+      background:var(--ng-blue-dark);
+    }
+    button:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
+    /* =========================
+       Status / Results
+       ========================= */
+    .status{
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:10px;
+      background:var(--soft-blue);
+      border:1px solid var(--soft-blue-border);
+      white-space:pre-line; /* allows \n from JS */
+    }
+    .status .k{
+      font-weight:600;
+    }
+    .status .msg{
+      margin-top:6px;
+      color:var(--muted);
+    }
+    .status.error{
+      background:var(--soft-red);
+      border-color:var(--soft-red-border);
+    }
+    .status.error .msg{
+      color:var(--danger);
+    }
+    .status.success{
+      background:var(--soft-green);
+      border-color:var(--soft-green-border);
+    }
+    .status.success .msg{
+      color:var(--success);
+    }
+
+    /* =========================
+       DeepAgents Panel (6.10)
+       ========================= */
+    .panel{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+      overflow:hidden;
+    }
+    .panel-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 14px;
+      cursor:pointer;
+      user-select:none;
+      background:linear-gradient(0deg, rgba(0,36,156,0.05), rgba(0,36,156,0.05));
+      border-bottom:1px solid rgba(0,0,0,0.04);
+    }
+    .panel-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      color:var(--ng-blue);
+    }
+    .badge{
+      font-size:.78rem;
+      font-weight:700;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,0.08);
+      background:#fff;
+      color:var(--muted);
+    }
+    .badge.ok{
+      color:var(--success);
+      border-color:rgba(11,102,35,0.25);
+      background:rgba(11,102,35,0.06);
+    }
+    .badge.warn{
+      color:#8a5a00;
+      border-color:rgba(138,90,0,0.25);
+      background:rgba(255,200,80,0.18);
+    }
+    .badge.off{
+      color:var(--muted);
+      border-color:rgba(0,0,0,0.12);
+      background:rgba(0,0,0,0.03);
+    }
+    .chev{
+      font-size:1.1rem;
+      color:var(--muted);
+      transition:transform .15s ease;
+    }
+    .panel[data-open="true"] .chev{
+      transform:rotate(180deg);
+    }
+    .panel-body{
+      padding:12px 14px;
+      display:none;
+    }
+    .panel[data-open="true"] .panel-body{
+      display:block;
+    }
+
+    .da-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px 14px;
+      margin-top:10px;
+    }
+    .kv{
+      padding:10px 10px;
+      border:1px solid rgba(0,0,0,0.06);
+      border-radius:10px;
+      background:rgba(0,0,0,0.02);
+    }
+    .kv .k{
+      font-size:.82rem;
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    .kv .v{
+      margin-top:4px;
+      font-size:1rem;
+      font-weight:650;
+      color:var(--text);
+      word-break:break-word;
+    }
+    .mono{
+      font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size:.9rem;
+    }
+
+    .da-note{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px dashed rgba(0,0,0,0.18);
+      color:var(--muted);
+      background:rgba(0,0,0,0.02);
+    }
+
+    /* =========================
+       Downloads
+       ========================= */
+    .downloads{
+      margin-top:14px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .downloads a{
+      display:inline-block;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--ng-blue);
+      text-decoration:none;
+      font-weight:600;
+    }
+    .downloads a:hover{
+      border-color:var(--ng-blue);
+    }
+
+    /* =========================
+       Responsive
+       ========================= */
+    @media (max-width: 800px){
+      .grid{ grid-template-columns: 1fr; }
+      .da-grid{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <h1>QAD Contract Intake</h1>
+  <p>Upload a contract and generate a QAD definition package for review</p>
+</header>
+
+<main>
+  <div class="card">
+    <form id="upload-form">
+      <div class="grid">
+
+        <div class="full">
+          <label for="contract">Contract File (PDF or DOCX)</label>
+          <input id="contract" name="contract" type="file" accept=".pdf,.docx" required />
+          <div class="hint">If the PDF is scanned, OCR will be used automatically.</div>
+        </div>
+
+        <div class="full">
+          <label for="email">Recipients (comma-separated)</label>
+          <input id="email" name="email" type="text"
+                 placeholder="user1@example.com, user2@example.com" required />
+          <div class="hint">
+            V1 will validate format lightly. Final email attachment logic comes in later sections.
+          </div>
+        </div>
+
+        <div>
+          <label for="program">Program (optional)</label>
+          <input id="program" name="program" type="text" placeholder="e.g., Program X" />
+        </div>
+
+        <div>
+          <label for="contract_id">Contract ID (optional)</label>
+          <input id="contract_id" name="contract_id" type="text"
+                 placeholder="e.g., N00019-xx-x-xxxx" />
+        </div>
+
+        <div class="full">
+          <label for="contract_version">Contract Version (optional)</label>
+          <input id="contract_version" name="contract_version" type="text"
+                 placeholder="e.g., Rev C / Mod 2" />
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="submit-btn" type="submit">Submit Contract</button>
+        <div class="hint">You will see job progress below.</div>
+      </div>
+    </form>
+
+    <div id="statusBox" class="status" style="display:none;">
+      <div><span class="k">Job:</span> <span id="jobId"></span></div>
+      <div><span class="k">Status:</span> <span id="jobStatus"></span></div>
+      <div class="msg" id="jobMsg"></div>
+    </div>
+
+    <!-- DeepAgents Panel (pretty) -->
+    <div id="deepagentsPanel" class="panel" style="display:none;" data-open="false">
+      <div class="panel-header" id="deepagentsToggle" role="button" aria-expanded="false" tabindex="0">
+        <div class="panel-title">
+          DeepAgents
+          <span id="deepagentsBadge" class="badge off">inactive</span>
+        </div>
+        <div class="chev">▾</div>
+      </div>
+
+      <div class="panel-body">
+        <div class="hint" id="deepagentsSummary">
+          DeepAgents configuration will appear here after job completion.
+        </div>
+
+        <div class="da-grid" id="deepagentsGrid" style="display:none;">
+          <div class="kv">
+            <div class="k">Preset</div>
+            <div class="v mono" id="daPreset">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Planner</div>
+            <div class="v" id="daPlanner">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Repair</div>
+            <div class="v" id="daRepair">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Quality</div>
+            <div class="v" id="daQuality">—</div>
+          </div>
+
+          <div class="kv">
+            <div class="k">Areas Cap</div>
+            <div class="v mono" id="daAreasCap">—</div>
+          </div>
+          <div class="kv">
+            <div class="k">Temperature</div>
+            <div class="v mono" id="daTemp">—</div>
+          </div>
+
+          <div class="kv full">
+            <div class="k">Export Policy</div>
+            <div class="v mono" id="daExport">—</div>
+          </div>
+        </div>
+
+        <div class="da-note" id="deepagentsNote" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- Debug downloads toggle (shown only when backend enables it) -->
+    <div id="debugToggleRow" class="hint" style="display:none; margin-top:12px;">
+      <label style="display:flex; align-items:center; gap:8px; font-weight:600;">
+        <input id="debugToggle" type="checkbox" />
+        Show debug downloads (advanced)
+      </label>
+      <div class="hint" style="margin-top:6px;">
+        Debug artifacts are intended for troubleshooting and SME review (chunks, ingest report, FAISS index, etc.).
+      </div>
+    </div>
+
+    <!-- Human-in-the-loop review (approve/reject + optional rerun) -->
+    <div id="reviewPanel" class="card" style="display:none; margin-top:12px;">
+      <h3 style="margin:0 0 10px 0;">Review</h3>
+      <div class="hint">Approve if the export looks good. Reject to provide feedback and re-run the job.</div>
+      <textarea id="reviewFeedback" rows="4" style="width:100%; margin-top:10px; padding:10px; border-radius:10px; border:1px solid var(--border);" placeholder="If rejecting, explain what's wrong and what you expected."></textarea>
+      <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+        <button id="btnApprove" type="button">Approve</button>
+        <button id="btnRejectRerun" type="button" class="secondary">Reject + Re-run</button>
+      </div>
+      <div id="reviewMsg" class="hint" style="margin-top:10px;"></div>
+    </div>
+
+    <div id="downloads" class="downloads" style="display:none;"></div>
+  </div>
+</main>
+
+<footer>
+  &copy; 2026 QAD DeepAgents. All Rights Reserved.
+</footer>
+
+<script src="/static/app.js"></script>
+
+<!-- Small inline helper to toggle the DeepAgents panel open/closed -->
+<script>
+  (function () {
+    const panel = document.getElementById("deepagentsPanel");
+    const toggle = document.getElementById("deepagentsToggle");
+    if (!panel || !toggle) return;
+
+    function setOpen(open) {
+      panel.dataset.open = open ? "true" : "false";
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    toggle.addEventListener("click", () => {
+      const open = panel.dataset.open === "true";
+      setOpen(!open);
+    });
+
+    toggle.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const open = panel.dataset.open === "true";
+        setOpen(!open);
+      }
+    });
+  })();
+</script>
+</body>
+</html>

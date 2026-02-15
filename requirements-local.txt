@@ -1,0 +1,9 @@
+# Optional dependencies for LOCAL embeddings
+# Install this only if you want EMBEDDINGS_PROVIDER=local.
+
+# NOTE: torch wheels vary by OS/CUDA; adjust as needed.
+# For CPU-only, the PyPI torch wheel is usually fine.
+
+torch>=2.0.0
+transformers>=4.46.0
+sentence-transformers>=2.6.1
