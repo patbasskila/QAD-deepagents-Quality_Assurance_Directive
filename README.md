@@ -81,5 +81,22 @@ sequenceDiagram
 ```
 
 
+## Human In The Loop Review Cycle
+
+```mermaid
+flowchart TD
+  DONE[Job completed CSV or XLSX ready] --> REVIEW[User reviews output in UI]
+
+  REVIEW -->|Approve| APPROVED[Mark job approved]
+  REVIEW -->|Reject with feedback| REJ[Store rejection and feedback]
+
+  REJ --> RERUN[Create new job referencing previous job]
+  RERUN --> FB[Inject feedback into next run]
+  FB --> RUN[Re run full pipeline Ingest RAG DeepAgents Export]
+
+  RUN --> DONE2[New CSV or XLSX generated]
+  DONE2 --> REVIEW
+```
+
 
 
