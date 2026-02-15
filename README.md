@@ -119,3 +119,29 @@ flowchart LR
 ```
 
 
+## Job Artifacts Layout
+
+```mermaid
+flowchart TB
+  ROOT[Job artifacts folder] --> A1[Contract text file]
+  ROOT --> A2[Document blocks file]
+  ROOT --> A3[Chunks file]
+  ROOT --> A4[Chunk metadata file]
+  ROOT --> A5[FAISS index file]
+  ROOT --> A6[Ingest report file]
+
+  ROOT --> AG[Agents folder]
+  AG --> P1[Planner raw output]
+  AG --> P2[Planner plan output]
+  AG --> D1[Merged drafts output]
+  AG --> N1[Normalized checks output]
+  AG --> Q1[Quality summary output]
+  AG --> E1[Export summary output]
+
+  ROOT --> OUT1[QAD checks output]
+  ROOT --> OUT2[QAD definition CSV]
+  ROOT --> OUT3[QAD definition XLSX]
+  ROOT --> REV[Review record optional]
+  ROOT --> RC[Rerun context optional]
+```
+
