@@ -35,5 +35,51 @@ flowchart LR
 ```
 
 
+## End to End Job Sequence
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant U as User
+  participant UI as Web UI
+  participant API as FastAPI Backend
+  participant ING as Ingest Service
+  participant RAG as Chunk Embed FAISS
+  participant DA as DeepAgents
+  participant LLM as LLM Mock or Azure
+  participant EXP as Export Service
+  participant ART as Artifacts Storage
+
+  U->>UI: Upload contract PDF or DOCX
+  UI->>API: Submit job with file and run config
+  API->>ART: Create job folder and metadata
+  API->>ING: Extract blocks and text
+  ING->>ART: Save contract text and ingest report
+
+  API->>RAG: Chunk text embed and build FAISS
+  RAG->>ART: Save chunks metadata and index
+
+  API->>DA: Start orchestration
+  DA->>DA: Planner builds area plan
+  DA->>ART: Save planner output and plan
+
+  loop For each area
+    DA->>RAG: Retrieve top k evidence
+    DA->>LLM: Generate draft checks
+    LLM-->>DA: Return structured JSON
+  end
+
+  DA->>ART: Save merged drafts and normalized checks
+  DA->>ART: Save quality summary
+
+  DA->>EXP: Generate CSV or XLSX export
+  EXP->>ART: Save final output files
+
+  UI->>API: Poll job status until complete
+  API-->>UI: Return status and download links
+  UI-->>U: Display results and allow download
+```
+
+
 
 
