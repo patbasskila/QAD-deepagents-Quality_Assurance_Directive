@@ -1,3 +1,52 @@
+QAD(Quality Assurance Directive) DeepAgents
+
+Agentic Contract Intelligence with Retrieval-Augmented Generation
+
+Upload a contract.
+Generate structured quality definition packages.
+Review, refine, and re-run with human feedback.
+
+Executive Summary
+
+QAD DeepAgents is an end-to-end AI system that transforms contract documents (PDF or DOCX) into structured, schema-aligned quality definition outputs using a modular multi-agent architecture.
+
+The project demonstrates:
+
+Agentic workflow orchestration
+
+Retrieval-Augmented Generation (RAG)
+
+Structured LLM output pipelines
+
+Embedding provider abstraction (remote + local)
+
+Human-in-the-loop feedback loops
+
+Artifact-based traceability
+
+Production-style backend architecture
+
+This repository is designed as a portfolio showcase of applied AI system design and implementation.
+
+User Interface
+
+Below is the contract submission interface used to initiate AI workflows:
+
+The UI supports:
+
+PDF or DOCX upload
+
+Optional metadata inputs
+
+Real-time job polling
+
+CSV/XLSX export downloads
+
+Human-in-the-loop approval and re-run cycle
+
+System Architecture
+
+
 ## System Overview
 
 ```mermaid
@@ -144,4 +193,5 @@ flowchart TB
   ROOT --> REV[Review record optional]
   ROOT --> RC[Rerun context optional]
 ```
+
 
