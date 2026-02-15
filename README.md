@@ -99,4 +99,23 @@ flowchart TD
 ```
 
 
+## Embeddings Provider Architecture
+
+```mermaid
+flowchart LR
+  CH[Chunks] --> E[Embeddings Client]
+
+  subgraph Provider Options
+    E -->|HuggingFace mode| HF[Hugging Face Inference API]
+    E -->|Local mode| LOC[Local transformer model]
+  end
+
+  HF --> V[Vector embeddings]
+  LOC --> V
+
+  V --> F[FAISS index]
+  F --> RET[Retrieve top k evidence]
+  RET --> DA[DeepAgents drafting]
+```
+
 
