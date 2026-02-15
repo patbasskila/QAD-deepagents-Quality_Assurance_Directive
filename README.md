@@ -1,53 +1,43 @@
-QAD(Quality Assurance Directive) DeepAgents
+## QAD(Quality Assurance Directive) DeepAgents
 
 Agentic Contract Intelligence with Retrieval-Augmented Generation
-
 Upload a contract.
 Generate structured quality definition packages.
 Review, refine, and re-run with human feedback.
 
-Executive Summary
+### Executive Summary
 
 QAD DeepAgents is an end-to-end AI system that transforms contract documents (PDF or DOCX) into structured, schema-aligned quality definition outputs using a modular multi-agent architecture.
-
 The project demonstrates:
 
-Agentic workflow orchestration
-
-Retrieval-Augmented Generation (RAG)
-
-Structured LLM output pipelines
-
-Embedding provider abstraction (remote + local)
-
-Human-in-the-loop feedback loops
-
-Artifact-based traceability
-
-Production-style backend architecture
+- Agentic workflow orchestration
+- Retrieval-Augmented Generation (RAG)
+- Structured LLM output pipelines
+- Embedding provider abstraction (remote + local)
+- Human-in-the-loop feedback loops
+- Artifact-based traceability
+- Production-style backend architecture
 
 This repository is designed as a portfolio showcase of applied AI system design and implementation.
 
-User Interface
+### User Interface
 
 Below is the contract submission interface used to initiate AI workflows:
 
 The UI supports:
 
-PDF or DOCX upload
-
-Optional metadata inputs
-
-Real-time job polling
-
-CSV/XLSX export downloads
-
-Human-in-the-loop approval and re-run cycle
-
-System Architecture
+- PDF or DOCX upload
+- Optional metadata inputs
+- Real-time job polling
+- CSV/XLSX export downloads
+- Human-in-the-loop approval and re-run cycle
+<img width="1171" height="751" alt="image" src="https://github.com/user-attachments/assets/e8942dcc-c2bc-434f-9a23-f80432dbd8fb" />
 
 
-## System Overview
+# System Architecture
+
+
+## High-Level Overview
 
 ```mermaid
 flowchart LR
@@ -82,9 +72,16 @@ flowchart LR
   UI -->|Approve or reject with feedback| HITL[HITL review loop]
   HITL -->|Rerun with feedback| API
 ```
+### Architectural Highlights
 
+- Modular service boundaries
+- Isolated job-level artifact storage
+- Deterministic orchestration flow
+- Feedback-aware regeneration
+- Pluggable embedding providers
+- LLM abstraction (mock or Azure OpenAI)
 
-## End to End Job Sequence
+## End-to-End Execution Flow
 
 ```mermaid
 sequenceDiagram
@@ -131,7 +128,8 @@ sequenceDiagram
 
 
 ## Human In The Loop Review Cycle
-
+The system is not purely autonomous. It incorporates a structured feedback loop.
+### Review & Regeneration Cycle
 ```mermaid
 flowchart TD
   DONE[Job completed CSV or XLSX ready] --> REVIEW[User reviews output in UI]
@@ -147,8 +145,16 @@ flowchart TD
   DONE2 --> REVIEW
 ```
 
+### Why This Matters
+
+- Enables controlled AI deployment
+- Supports human validation in regulated workflows
+- Creates an iterative refinement loop
+- Enforce applied AI governance design
+
 
 ## Embeddings Provider Architecture
+The system supports both remote and local embedding strategies.
 
 ```mermaid
 flowchart LR
@@ -166,10 +172,21 @@ flowchart LR
   F --> RET[Retrieve top k evidence]
   RET --> DA[DeepAgents drafting]
 ```
+### Embedding Modes
+
+Remote (Default)
+- Lightweight
+- No large model downloads
+- Ideal for public deployments
+
+Local (Optional)
+- Fully offline capable
+- Requires additional dependencies
+- Suitable for restricted environments
 
 
 ## Job Artifacts Layout
-
+Each run generates a full artifact trail for observability and debugging.
 ```mermaid
 flowchart TB
   ROOT[Job artifacts folder] --> A1[Contract text file]
@@ -193,5 +210,53 @@ flowchart TB
   ROOT --> REV[Review record optional]
   ROOT --> RC[Rerun context optional]
 ```
+### This artifact-first design enables:
+- Deterministic debugging
+- Run reproducibility
+- Prompt iteration workflows
+- Structured evaluation pipelines
 
+## Running the Project
+### Create Virtual Environment
+python -m venv .venv
+
+Activate:
+
+### Windows
+.\.venv\Scripts\Activate.ps1
+### Mac/Linux
+source .venv/bin/activate
+
+## Install Dependencies
+pip install -r requirements.txt
+
+Optional local embeddings:
+
+pip install -r requirements-local.txt
+
+## Configure Environment
+Copy example:
+
+cp .env.example .env
+
+Edit:
+
+EMBEDDINGS_PROVIDER=huggingface
+
+HF_TOKEN=optional
+
+## Start Server
+uvicorn app.main:app --reload
+
+Open:
+http://127.0.0.1:8000
+
+
+## Tech Stack
+- FastAPI
+- FAISS
+- Hugging Face Inference API
+- sentence-transformers (optional local)
+- Uvicorn
+- HTML/CSS frontend
 
